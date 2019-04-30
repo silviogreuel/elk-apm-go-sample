@@ -1,5 +1,5 @@
 GOOS ?= linux
-GOARCH ?= amd63
+GOARCH ?= amd64
 CGO_ENABLED ?= 0
 LDFLAGS += -s -w
 SRCDIR ?= .
