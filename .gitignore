@@ -100,3 +100,8 @@ tags
 .history
 
 # End of https://www.gitignore.io/api/go,vim,emacs,visualstudiocode
+#
+
+### Project ###
+# Ignoring build files
+bin/*
