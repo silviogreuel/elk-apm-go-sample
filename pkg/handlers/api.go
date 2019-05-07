@@ -1,12 +1,14 @@
 package handlers
 
 import (
-	"github.com/eventials/vlab-boilerplate-api/pkg/handlers/hello"
 	"github.com/gin-gonic/gin"
+	"github.com/silviogreuel/elk-apm-go-sample/pkg/casing"
+	"go.elastic.co/apm/module/apmgin"
 )
 
 func Serve(addr string) error {
 	api := gin.New()
-	hello.Attach(api.Group("/hello"))
+	api.Use(apmgin.Middleware(api))
+	casing.Attach(api.Group("/casing"))
 	return api.Run(addr)
 }

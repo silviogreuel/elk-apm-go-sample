@@ -1,0 +1,97 @@
+version: '3'
+
+services:
+
+  elasticsearch:
+    build: 
+      context: elasticsearch/
+    volumes:
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk
+
+  logstash:
+    build: 
+      context: logstash/
+    volumes:
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./logstash/pipeline:/usr/share/logstash/pipeline
+    ports:
+      - "5000:5000"
+      - "5044:5044"
+      - "5080:5080"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
+  apm:
+    build:
+      context: apm/
+    volumes:
+      - ./apm/config/apm-server.yml:/usr/share/apm-server/apm-server.yml
+    ports:
+      - "8200:8200"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    build: 
+      context: kibana/
+    volumes:
+      - ./kibana/config/:/usr/share/kibana/config
+    ports:
+      - "5601:5601"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
+  casing:
+    build:
+      context: ../.
+      dockerfile: ./build/casing/Dockerfile
+    ports:
+      - "8001:8080"
+    environment:
+      ELASTIC_APM_SERVICE_NAME: "casing"
+      ELASTIC_APM_SERVER_URL: "http://apm:8200"
+    networks:
+      - elk
+
+  ucase:
+    build:
+      context: ../.
+      dockerfile: ./build/casing/Dockerfile
+    ports:
+      - "8002:8080"
+    environment:
+      ELASTIC_APM_SERVICE_NAME: "ucase"
+      ELASTIC_APM_SERVER_URL: "http://apm:8200"
+    networks:
+      - elk
+
+  lcase:
+    build:
+      context: ../.
+      dockerfile: ./build/casing/Dockerfile
+    ports:
+      - "8003:8080"
+    environment:
+      ELASTIC_APM_SERVICE_NAME: "lcase"
+      ELASTIC_APM_SERVER_URL: "http://apm:8200"
+    networks:
+      - elk
+
+networks:
+  elk:
+    driver: bridge

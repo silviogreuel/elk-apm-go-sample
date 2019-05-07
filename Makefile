@@ -50,6 +50,21 @@ build-cmd:
 			CGO_ENABLED=$(CGO_ENABLED) GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags="${LDFLAGS}" -o bin/$$dir ./cmd/$$dir; \
 	done
 
+## build-docker: builds dockerfiles
+.PHONY: build-docker
+build-docker:
+	@echo GOOS       : $(GOOS)
+	@echo GOARCH     : $(GOARCH)
+	@echo LDFLAGS    : $(LDFLAGS)
+	@echo CGO_ENABLED: $(CGO_ENABLED)
+	@echo GIT_SUMMARY: $(GIT_SUMMARY)
+	@echo GIT_BRANCH : $(GIT_BRANCH)
+	@echo GIT_MERGE  : $(GIT_MERGE)
+	@for dir in `ls build`; do \
+			echo dockering: $$dir; \
+			docker build -t local/$$dir -f ./build/$$dir/Dockerfile .; \
+	done
+
 ## test: test all files recursively 
 .PHONY: test
 test:
@@ -58,6 +73,8 @@ test:
 ## all: runs clean test build 
 .PHONY: all
 all: clean deps test build
+
+
 
 ## help: show this help
 .PHONY: help

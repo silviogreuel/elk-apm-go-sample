@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/eventials/vlab-boilerplate-api/cmd/boilerplate-api/options/flags"
-	"github.com/eventials/vlab-boilerplate-api/pkg/handlers"
 	_ "github.com/joho/godotenv/autoload"
+	"github.com/silviogreuel/elk-apm-go-sample/cmd/casing/options/flags"
+	"github.com/silviogreuel/elk-apm-go-sample/pkg/handlers"
 	"github.com/urfave/cli"
 )
 
 var (
-	AppName    = "boilerplate-api"
-	AppUsage   = "A cli tool to interact with vindi private api"
+	AppName    = "case"
+	AppUsage   = "A casing sample server"
 	AppVersion = "0.0.1"
 	GitSummary = "none"
 	GitBranch  = "none"
